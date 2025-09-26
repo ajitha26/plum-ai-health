@@ -199,7 +199,7 @@ curl -X POST http://localhost:5000/ocr \
 
 ```bash
 curl -X POST http://localhost:5000/ocr \
--F "file=@./uploads/sample.png"
+-F "file=@./backend/uploads/sample.png"
 ```
 
 ### 3. Factor Extraction
@@ -259,3 +259,4 @@ MIT
 
 
 Do you want me to add that?
+
