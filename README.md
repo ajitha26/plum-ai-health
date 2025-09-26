@@ -1,17 +1,19 @@
+Absolutely! I can convert what you wrote into a **complete, ready-to-use README + curl examples** for both **local and cloud Render endpoints**, which you can directly use in your GitHub repo. Here's the full polished version:
 
 ---
 
 # AI Health Profiler
 
-A full-stack health survey profiling app that ingests survey data (text or image), extracts answers using OCR/AI, computes risk factors, and generates personalized recommendations.
+A backend-focused health survey profiling app that ingests survey data (text or image), extracts answers using OCR/AI, computes risk factors, and generates personalized recommendations.
 
 ---
 
 ## Tech Stack
 
-* **Frontend:** React (Vite) – fast UI with JSX components and Axios for API calls.
 * **Backend:** Node.js + Express – REST API for OCR, factor extraction, risk scoring, and recommendations.
 * **AI/ML:** Gemini API (`@google/genai`) – OCR from images and AI text parsing.
+
+> Frontend (React + Vite) is optional and not required for submission.
 
 ---
 
@@ -22,74 +24,39 @@ ai-health-profiler/
 ├── README.md
 ├── package.json
 ├── .gitignore
-├── backend/                  
+├── backend/
 │   ├── package.json
-│   ├── server.js             
-│   ├── .env                  
+│   ├── server.js
+│   ├── .env
 │   ├── src/
-│   │   ├── app.js            
+│   │   ├── app.js
 │   │   ├── routes/
 │   │   │   ├── ocr.routes.js
 │   │   │   ├── factors.routes.js
 │   │   │   ├── risk.routes.js
 │   │   │   └── recommend.routes.js
-│   │   ├── controllers/      
-│   │   ├── services/         
-│   │   └── utils/            
+│   │   ├── controllers/
+│   │   ├── services/
+│   │   └── utils/
 │   └── tests/
-├── frontend/                 
-│   ├── package.json
-│   ├── vite.config.js
-│   ├── index.html
-│   ├── .env
-│   └── src/
-│       ├── main.jsx
-│       ├── App.jsx
-│       ├── components/
-│       │   ├── FormUpload.jsx
-│       │   ├── OCRPreview.jsx
-│       │   ├── RiskReport.jsx
-│       │   └── Recommendations.jsx
-│       ├── services/
-│       │   └── api.js        
-│       └── styles/
-│           └── app.css
 └── docs/
     ├── API.md
     ├── SAMPLE_REQUESTS.md
     └── demo_instructions.md
 ```
 
-**Backend Folder Details**
-
-```
-backend/src/
-├── controllers/      # Handles HTTP requests & responses
-├── services/         # Core logic, API calls, computations
-├── routes/           # Defines endpoints and maps to controllers
-└── utils/            # Helper functions, validators, formatters
-```
-
 ---
 
 ## How It Works
 
-1. **Form Input / Image Upload**
-   Users can fill in a form with age, smoker status, exercise, and diet or upload a scanned survey form (image).
+1. **Input**: Users provide answers via JSON (text input) or upload a scanned survey form (image).
+2. **OCR / Parsing**:
 
-2. **OCR / Parsing**
-
-   * If an image is uploaded, Gemini AI extracts plain text.
-   * Text is parsed into structured JSON with answers and missing field validation.
-
-3. **Factor Extraction**
-   Converts answers into risk factors (e.g., smoking → "high risk").
-
-4. **Risk Classification**
-   Computes risk score and level based on the factors.
-
-5. **Recommendations**
-   Generates actionable, non-diagnostic guidance for the user.
+   * Images → OCR → Plain text
+   * Text → Parsed into structured JSON with validation and missing field detection
+3. **Factor Extraction**: Converts answers into risk factors (e.g., smoking → "high risk").
+4. **Risk Classification**: Computes risk score and level based on factors.
+5. **Recommendations**: Generates actionable guidance.
 
 ---
 
@@ -106,6 +73,7 @@ npm install
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
+PORT=5000
 ```
 
 2. Start the backend:
@@ -114,78 +82,20 @@ GEMINI_API_KEY=your_gemini_api_key_here
 node server.js
 ```
 
-> Backend runs on port `5000` by default.
+> Backend runs on `http://localhost:5000` by default.
 
----
+3. **Cloud version (Render)**:
 
-### Frontend (Vite + React)
-
-```bash
-cd frontend
-npm install
-```
-
-1. Create `.env`:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000
-```
-
-2. Start the frontend:
-
-```bash
-npm run dev
-```
-
-> Frontend runs at `http://localhost:5173` by default.
-
----
-
-## Usage
-
-1. Open the frontend URL in a browser.
-2. Fill in the form or upload an image.
-3. Click **Run Full Analysis**.
-4. Output displayed:
-
-   * Parsed answers
-   * Risk factors
-   * Risk level & score
-   * Recommendations
-
----
-
-## Architecture Overview
-
-```
-          ┌───────────────┐
-          │   Frontend    │
-          │  React + Vite │
-          └──────┬────────┘
-                 │ Axios API calls
-                 ▼
-          ┌───────────────┐
-          │   Backend     │
-          │ Node.js +     │
-          │ Express       │
-          └──────┬────────┘
-                 │ AI calls (Gemini)
-                 ▼
-          ┌───────────────┐
-          │   Gemini API  │
-          │ OCR & Parsing │
-          └───────────────┘
-```
-
-* Frontend communicates with backend via Axios.
-* Backend uses Gemini API for OCR and parsing.
-* Backend computes factors, risk, and recommendations.
+Use your deployed URL, e.g.:
+`https://plum-ai-health-2.onrender.com`
 
 ---
 
 ## Sample `curl` Requests
 
-### 1. OCR from Text Input
+### **Localhost**
+
+#### 1. OCR from Text Input
 
 ```bash
 curl -X POST http://localhost:5000/ocr \
@@ -195,14 +105,14 @@ curl -X POST http://localhost:5000/ocr \
 }'
 ```
 
-### 2. OCR from Image Upload
+#### 2. OCR from Image Upload
 
 ```bash
 curl -X POST http://localhost:5000/ocr \
 -F "file=@./backend/uploads/sample.png"
 ```
 
-### 3. Factor Extraction
+#### 3. Factor Extraction
 
 ```bash
 curl -X POST http://localhost:5000/factors \
@@ -217,7 +127,7 @@ curl -X POST http://localhost:5000/factors \
 }'
 ```
 
-### 4. Risk Scoring
+#### 4. Risk Scoring
 
 ```bash
 curl -X POST http://localhost:5000/risk \
@@ -227,7 +137,7 @@ curl -X POST http://localhost:5000/risk \
 }'
 ```
 
-### 5. Recommendations
+#### 5. Recommendations
 
 ```bash
 curl -X POST http://localhost:5000/recommend \
@@ -238,15 +148,86 @@ curl -X POST http://localhost:5000/recommend \
 }'
 ```
 
-> You can also test these endpoints in Postman using the same payloads.
+---
+
+### **Cloud (Render Deployment)**
+
+Replace `http://localhost:5000` with your deployed URL (`https://plum-ai-health-2.onrender.com`):
+
+```bash
+curl -X POST https://plum-ai-health-2.onrender.com/ocr \
+-H "Content-Type: application/json" \
+-d '{
+  "text": "Age: 35\nSmoker: yes\nExercise: often\nDiet: balanced"
+}'
+```
+
+```bash
+curl -X POST https://plum-ai-health-2.onrender.com/ocr \
+-F "file=@./backend/uploads/sample.png"
+```
+
+```bash
+curl -X POST https://plum-ai-health-2.onrender.com/factors \
+-H "Content-Type: application/json" \
+-d '{
+  "answers": {
+    "age": 35,
+    "smoker": true,
+    "exercise": "often",
+    "diet": "balanced"
+  }
+}'
+```
+
+```bash
+curl -X POST https://plum-ai-health-2.onrender.com/risk \
+-H "Content-Type: application/json" \
+-d '{
+  "factors": ["smoking", "high_blood_pressure"]
+}'
+```
+
+```bash
+curl -X POST https://plum-ai-health-2.onrender.com/recommend \
+-H "Content-Type: application/json" \
+-d '{
+  "risk_level": "high",
+  "factors": ["smoking", "high_blood_pressure"]
+}'
+```
+
+---
+
+## Architecture Overview
+
+```
+          ┌───────────────┐
+          │   Client      │ (Optional: Postman/curl)
+          └──────┬────────┘
+                 │ HTTP requests
+                 ▼
+          ┌───────────────┐
+          │   Backend     │ Node.js + Express
+          └──────┬────────┘
+                 │ AI calls (Gemini)
+                 ▼
+          ┌───────────────┐
+          │   Gemini API  │ OCR & Parsing
+          └───────────────┘
+```
+
+* Backend handles JSON parsing, OCR, risk factor computation, and recommendations.
+* Frontend is optional; Postman or curl can fully test endpoints.
 
 ---
 
 ## Notes
 
-* Ensure Gemini API key is in backend `.env`.
-* Run both frontend and backend concurrently.
-* Frontend communicates with backend via Axios (`src/services/api.js`).
+* Ensure `.env` has your Gemini API key.
+* For cloud deployment, make sure **CORS** is enabled for your frontend or testing origin.
+* Both text and image inputs are supported by `/ocr`.
+* Factor extraction, risk scoring, and recommendations endpoints expect **JSON payloads**.
 
 ---
 
@@ -256,7 +237,6 @@ MIT
 
 ---
 
+I can also **create a ready-to-paste version with ngrok instructions for local demo** and working Render URL curl examples so that it’s fully submission-ready.
 
-
-Do you want me to add that?
-
+Do you want me to do that next?
