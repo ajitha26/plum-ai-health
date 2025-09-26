@@ -1,6 +1,6 @@
 
 
-````markdown
+
 # AI Health Profiler
 
 A full-stack health survey profiling app that ingests survey data (text or image), extracts answers using OCR/AI, computes risk factors, and generates personalized recommendations.
@@ -199,3 +199,4 @@ This is **ready to copy into your README.md**.
 
 If you want, I can also **add a visual folder tree diagram** instead of YAML—it looks cleaner on GitHub. Do you want me to do that?
 ```
+
