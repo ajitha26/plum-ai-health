@@ -5,19 +5,17 @@ const handleOCR = async (req, res) => {
     let input = {};
 
     if (req.file) {
-      // File uploaded via FormData (memory buffer)
+      // buffer from memory storage
       input.buffer = req.file.buffer;
       input.mimeType = req.file.mimetype;
     } else if (req.body.text) {
-      // Plain text input
       input.text = req.body.text;
     } else {
-      return res.status(400).json({ error: "Provide text or file" });
+      return res.status(400).json({ error: "Provide text or file upload" });
     }
 
     const result = await parseInput(input);
 
-    // Guardrail: exit if >50% fields missing
     if (result.missing_fields.length > 2) {
       return res.status(200).json({
         status: "incomplete_profile",

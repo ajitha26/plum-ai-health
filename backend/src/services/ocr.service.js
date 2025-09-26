@@ -5,9 +5,11 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-// OCR helper: accepts Buffer instead of file path
-const ocrFromBuffer = async (buffer, mimeType = "image/png") => {
-  const base64Data = buffer.toString("base64");
+// OCR helper for buffer input
+const ocrFromImage = async ({ buffer, mimeType }) => {
+  if (!buffer) throw new Error("No image buffer provided");
+
+  const imageData = buffer.toString("base64");
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
@@ -16,12 +18,7 @@ const ocrFromBuffer = async (buffer, mimeType = "image/png") => {
         role: "user",
         parts: [
           { text: "Extract the text from this image. Provide plain text, line by line." },
-          {
-            inlineData: {
-              data: base64Data,
-              mimeType: mimeType,
-            },
-          },
+          { inlineData: { data: imageData, mimeType } },
         ],
       },
     ],
@@ -37,7 +34,9 @@ const ocrFromBuffer = async (buffer, mimeType = "image/png") => {
 
 // Parse OCR text into structured answers
 const parseOCRText = (text) => {
-  if (typeof text !== "string") throw new Error("parseOCRText: input must be a string");
+  if (typeof text !== "string") {
+    throw new Error("parseOCRText: input must be a string");
+  }
 
   const answers = {};
   const missing_fields = [];
@@ -61,14 +60,14 @@ const parseOCRText = (text) => {
   return { answers, missing_fields, confidence: 0.9, text };
 };
 
-// Main parseInput function
+// Main parser
 const parseInput = async ({ text, buffer, mimeType }) => {
   let inputText = "";
 
   if (text) {
     inputText = text;
-  } else if (buffer) {
-    inputText = await ocrFromBuffer(buffer, mimeType);
+  } else if (buffer && mimeType) {
+    inputText = await ocrFromImage({ buffer, mimeType });
   } else {
     throw new Error("No input provided");
   }
