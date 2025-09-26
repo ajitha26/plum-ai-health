@@ -1,6 +1,3 @@
-// backend/src/services/ocr.service.js
-const fs = require("fs");
-const path = require("path");
 const { GoogleGenAI } = require("@google/genai");
 
 // Gemini client setup
@@ -8,13 +5,9 @@ const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY,
 });
 
-// OCR helper
-const ocrFromImage = async (imagePath) => {
-  if (!fs.existsSync(imagePath)) {
-    throw new Error("Image file not found");
-  }
-
-  const imageData = fs.readFileSync(imagePath, { encoding: "base64" });
+// OCR helper: accepts Buffer instead of file path
+const ocrFromBuffer = async (buffer, mimeType = "image/png") => {
+  const base64Data = buffer.toString("base64");
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
@@ -25,8 +18,8 @@ const ocrFromImage = async (imagePath) => {
           { text: "Extract the text from this image. Provide plain text, line by line." },
           {
             inlineData: {
-              data: imageData,
-              mimeType: "image/png", // or "image/jpeg"
+              data: base64Data,
+              mimeType: mimeType,
             },
           },
         ],
@@ -34,7 +27,6 @@ const ocrFromImage = async (imagePath) => {
     ],
   });
 
-  // @google/genai: safest extraction
   const text =
     response.output?.[0]?.content?.[0]?.text ||
     response.text ||
@@ -45,9 +37,7 @@ const ocrFromImage = async (imagePath) => {
 
 // Parse OCR text into structured answers
 const parseOCRText = (text) => {
-  if (typeof text !== "string") {
-    throw new Error("parseOCRText: input must be a string");
-  }
+  if (typeof text !== "string") throw new Error("parseOCRText: input must be a string");
 
   const answers = {};
   const missing_fields = [];
@@ -71,14 +61,14 @@ const parseOCRText = (text) => {
   return { answers, missing_fields, confidence: 0.9, text };
 };
 
-// Main parser
-const parseInput = async ({ text, imagePath }) => {
+// Main parseInput function
+const parseInput = async ({ text, buffer, mimeType }) => {
   let inputText = "";
 
   if (text) {
     inputText = text;
-  } else if (imagePath) {
-    inputText = await ocrFromImage(imagePath);
+  } else if (buffer) {
+    inputText = await ocrFromBuffer(buffer, mimeType);
   } else {
     throw new Error("No input provided");
   }

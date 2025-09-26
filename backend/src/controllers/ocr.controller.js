@@ -5,21 +5,19 @@ const handleOCR = async (req, res) => {
     let input = {};
 
     if (req.file) {
-      // file uploaded via FormData
-      input.imagePath = req.file.path;
+      // File uploaded via FormData (memory buffer)
+      input.buffer = req.file.buffer;
+      input.mimeType = req.file.mimetype;
     } else if (req.body.text) {
-      // plain text sent
+      // Plain text input
       input.text = req.body.text;
-    } else if (req.body.imagePath) {
-      // manual server path (useful for curl)
-      input.imagePath = req.body.imagePath;
     } else {
-      return res.status(400).json({ error: "Provide text or file/imagePath" });
+      return res.status(400).json({ error: "Provide text or file" });
     }
 
     const result = await parseInput(input);
 
-    // guardrail
+    // Guardrail: exit if >50% fields missing
     if (result.missing_fields.length > 2) {
       return res.status(200).json({
         status: "incomplete_profile",
