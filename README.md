@@ -1,5 +1,5 @@
 
-
+---
 
 # AI Health Profiler
 
@@ -9,79 +9,65 @@ A full-stack health survey profiling app that ingests survey data (text or image
 
 ## Tech Stack
 
-- **Frontend:** React (Vite) – modern, fast UI with JSX components and Axios for API calls.  
-- **Backend:** Node.js + Express – REST API for OCR, factor extraction, risk scoring, and recommendations.  
-- **AI/ML:** Gemini API (`@google/genai`) – OCR from images and AI text parsing.
+* **Frontend:** React (Vite) – fast UI with JSX components and Axios for API calls.
+* **Backend:** Node.js + Express – REST API for OCR, factor extraction, risk scoring, and recommendations.
+* **AI/ML:** Gemini API (`@google/genai`) – OCR from images and AI text parsing.
 
 ---
 
-## Folder Structure (YAML)
+## Folder Structure
 
-```yaml
-ai-health-profiler:
-  README.md
-  package.json
-  .gitignore
-  backend:
-    package.json
-    server.js
-    .env
-    src:
-      app.js
-      routes:
-        ocr.routes.js
-        factors.routes.js
-        risk.routes.js
-        recommend.routes.js
-      controllers:
-        ocr.controller.js
-        factors.controller.js
-        risk.controller.js
-        recommend.controller.js
-      services:
-        ocr.service.js
-        parser.service.js
-        factor.service.js
-        risk.service.js
-        recommend.service.js
-      utils:
-        validator.js
-        responseFormatter.js
-    tests:
-      ocr.test.js
-      risk.test.js
-      recommend.test.js
-  frontend:
-    package.json
-    vite.config.js
-    index.html
-    .env
-    src:
-      main.jsx
-      App.jsx
-      components:
-        FormUpload.jsx
-        OCRPreview.jsx
-        RiskReport.jsx
-        Recommendations.jsx
-      services:
-        api.js
-      styles:
-        app.css
-  docs:
-    API.md
-    SAMPLE_REQUESTS.md
-    demo_instructions.md
-````
+```
+ai-health-profiler/
+├── README.md
+├── package.json
+├── .gitignore
+├── backend/                  
+│   ├── package.json
+│   ├── server.js             
+│   ├── .env                  
+│   ├── src/
+│   │   ├── app.js            
+│   │   ├── routes/
+│   │   │   ├── ocr.routes.js
+│   │   │   ├── factors.routes.js
+│   │   │   ├── risk.routes.js
+│   │   │   └── recommend.routes.js
+│   │   ├── controllers/      
+│   │   ├── services/         
+│   │   └── utils/            
+│   └── tests/
+├── frontend/                 
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── index.html
+│   ├── .env
+│   └── src/
+│       ├── main.jsx
+│       ├── App.jsx
+│       ├── components/
+│       │   ├── FormUpload.jsx
+│       │   ├── OCRPreview.jsx
+│       │   ├── RiskReport.jsx
+│       │   └── Recommendations.jsx
+│       ├── services/
+│       │   └── api.js        
+│       └── styles/
+│           └── app.css
+└── docs/
+    ├── API.md
+    ├── SAMPLE_REQUESTS.md
+    └── demo_instructions.md
+```
 
 **Backend Folder Details**
 
-```yaml
-backend/src:
-  controllers/      # Handles HTTP requests & responses
-  services/         # Core logic, API calls, computations
-  routes/           # Defines endpoints and maps to controllers
-  utils/            # Helper functions, validators, formatters
+```
+backend/src/
+├── controllers/      # Handles HTTP requests & responses
+├── services/         # Core logic, API calls, computations
+├── routes/           # Defines endpoints and maps to controllers
+└── utils/            # Helper functions, validators, formatters
 ```
 
 ---
@@ -89,7 +75,7 @@ backend/src:
 ## How It Works
 
 1. **Form Input / Image Upload**
-   Users can fill a form with age, smoker status, exercise, and diet details **or upload a scanned survey form** (image).
+   Users can fill in a form with age, smoker status, exercise, and diet or upload a scanned survey form (image).
 
 2. **OCR / Parsing**
 
@@ -97,16 +83,13 @@ backend/src:
    * Text is parsed into structured JSON with answers and missing field validation.
 
 3. **Factor Extraction**
-
-   * Converts answers into risk factors (e.g., smoking → "high risk").
+   Converts answers into risk factors (e.g., smoking → "high risk").
 
 4. **Risk Classification**
-
-   * Computes risk score and level based on factors.
+   Computes risk score and level based on the factors.
 
 5. **Recommendations**
-
-   * Generates actionable, non-diagnostic guidance for the user.
+   Generates actionable, non-diagnostic guidance for the user.
 
 ---
 
@@ -119,19 +102,19 @@ cd backend
 npm install
 ```
 
-1. Create `.env` file:
+1. Create `.env`:
 
 ```env
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-2. Start the backend server:
+2. Start the backend:
 
 ```bash
 node server.js
 ```
 
-> The backend runs on port `5000` by default.
+> Backend runs on port `5000` by default.
 
 ---
 
@@ -142,28 +125,28 @@ cd frontend
 npm install
 ```
 
-1. Create `.env` file (optional):
+1. Create `.env`:
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000
 ```
 
-2. Start the frontend development server:
+2. Start the frontend:
 
 ```bash
 npm run dev
 ```
 
-> The frontend runs at `http://localhost:5173` by default.
+> Frontend runs at `http://localhost:5173` by default.
 
 ---
 
 ## Usage
 
 1. Open the frontend URL in a browser.
-2. Fill in the form fields or upload an image.
+2. Fill in the form or upload an image.
 3. Click **Run Full Analysis**.
-4. The app will display:
+4. Output displayed:
 
    * Parsed answers
    * Risk factors
@@ -174,18 +157,96 @@ npm run dev
 
 ## Architecture Overview
 
-```text
-Frontend (React) <--Axios--> Backend (Node.js/Express) <--Gemini API--> AI OCR & Parsing
-Frontend displays parsed answers, risk factors, and recommendations
 ```
+          ┌───────────────┐
+          │   Frontend    │
+          │  React + Vite │
+          └──────┬────────┘
+                 │ Axios API calls
+                 ▼
+          ┌───────────────┐
+          │   Backend     │
+          │ Node.js +     │
+          │ Express       │
+          └──────┬────────┘
+                 │ AI calls (Gemini)
+                 ▼
+          ┌───────────────┐
+          │   Gemini API  │
+          │ OCR & Parsing │
+          └───────────────┘
+```
+
+* Frontend communicates with backend via Axios.
+* Backend uses Gemini API for OCR and parsing.
+* Backend computes factors, risk, and recommendations.
+
+---
+
+## Sample `curl` Requests
+
+### 1. OCR from Text Input
+
+```bash
+curl -X POST http://localhost:5000/ocr \
+-H "Content-Type: application/json" \
+-d '{
+  "text": "Age: 35\nSmoker: yes\nExercise: often\nDiet: balanced"
+}'
+```
+
+### 2. OCR from Image Upload
+
+```bash
+curl -X POST http://localhost:5000/ocr \
+-F "file=@./uploads/sample.png"
+```
+
+### 3. Factor Extraction
+
+```bash
+curl -X POST http://localhost:5000/factors \
+-H "Content-Type: application/json" \
+-d '{
+  "answers": {
+    "age": 35,
+    "smoker": true,
+    "exercise": "often",
+    "diet": "balanced"
+  }
+}'
+```
+
+### 4. Risk Scoring
+
+```bash
+curl -X POST http://localhost:5000/risk \
+-H "Content-Type: application/json" \
+-d '{
+  "factors": ["smoking", "high_blood_pressure"]
+}'
+```
+
+### 5. Recommendations
+
+```bash
+curl -X POST http://localhost:5000/recommend \
+-H "Content-Type: application/json" \
+-d '{
+  "risk_level": "high",
+  "factors": ["smoking", "high_blood_pressure"]
+}'
+```
+
+> You can also test these endpoints in Postman using the same payloads.
 
 ---
 
 ## Notes
 
-* Backend must have a valid Gemini API key in `.env`.
-* Both frontend and backend must run concurrently for full functionality.
-* Frontend communicates with backend via Axios API wrapper (`src/services/api.js`).
+* Ensure Gemini API key is in backend `.env`.
+* Run both frontend and backend concurrently.
+* Frontend communicates with backend via Axios (`src/services/api.js`).
 
 ---
 
@@ -193,10 +254,8 @@ Frontend displays parsed answers, risk factors, and recommendations
 
 MIT
 
-```
+---
 
-This is **ready to copy into your README.md**.  
 
-If you want, I can also **add a visual folder tree diagram** instead of YAML—it looks cleaner on GitHub. Do you want me to do that?
-```
 
+Do you want me to add that?
