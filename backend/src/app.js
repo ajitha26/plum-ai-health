@@ -7,6 +7,12 @@ const recommendRoutes = require('./routes/recommend.routes');
 
 const app = express();
 
+// Allow frontend origin
+app.use(cors({
+  origin: "https://plum-ai-health-frontend-2.vercel.app", // frontend URL
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true
+}));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
