@@ -1,15 +1,13 @@
+const fs = require("fs");
+const path = require("path");
 const { GoogleGenAI } = require("@google/genai");
 
-// Gemini client setup
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY,
-});
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// OCR helper for buffer input
-const ocrFromImage = async ({ buffer, mimeType }) => {
-  if (!buffer) throw new Error("No image buffer provided");
+const ocrFromImage = async (imagePath) => {
+  if (!fs.existsSync(imagePath)) throw new Error("Image file not found");
 
-  const imageData = buffer.toString("base64");
+  const imageData = fs.readFileSync(imagePath, { encoding: "base64" });
 
   const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
@@ -17,27 +15,17 @@ const ocrFromImage = async ({ buffer, mimeType }) => {
       {
         role: "user",
         parts: [
-          { text: "Extract the text from this image. Provide plain text, line by line." },
-          { inlineData: { data: imageData, mimeType } },
+          { text: "Extract text from this image. Provide plain text, line by line." },
+          { inlineData: { data: imageData, mimeType: "image/png" } },
         ],
       },
     ],
   });
 
-  const text =
-    response.output?.[0]?.content?.[0]?.text ||
-    response.text ||
-    "";
-
-  return text;
+  return response.output?.[0]?.content?.[0]?.text || response.text || "";
 };
 
-// Parse OCR text into structured answers
 const parseOCRText = (text) => {
-  if (typeof text !== "string") {
-    throw new Error("parseOCRText: input must be a string");
-  }
-
   const answers = {};
   const missing_fields = [];
 
@@ -60,18 +48,9 @@ const parseOCRText = (text) => {
   return { answers, missing_fields, confidence: 0.9, text };
 };
 
-// Main parser
-const parseInput = async ({ text, buffer, mimeType }) => {
-  let inputText = "";
-
-  if (text) {
-    inputText = text;
-  } else if (buffer && mimeType) {
-    inputText = await ocrFromImage({ buffer, mimeType });
-  } else {
-    throw new Error("No input provided");
-  }
-
+const parseInput = async ({ text, imagePath }) => {
+  let inputText = text || (imagePath ? await ocrFromImage(imagePath) : null);
+  if (!inputText) throw new Error("No input provided");
   return parseOCRText(inputText);
 };
 

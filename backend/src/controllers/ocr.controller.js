@@ -5,13 +5,11 @@ const handleOCR = async (req, res) => {
     let input = {};
 
     if (req.file) {
-      // buffer from memory storage
-      input.buffer = req.file.buffer;
-      input.mimeType = req.file.mimetype;
+      input.imagePath = req.file.path;
     } else if (req.body.text) {
       input.text = req.body.text;
     } else {
-      return res.status(400).json({ error: "Provide text or file upload" });
+      return res.status(400).json({ error: "Provide text or file" });
     }
 
     const result = await parseInput(input);
