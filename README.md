@@ -151,10 +151,10 @@ curl -X POST http://localhost:5000/recommend \
 
 ### **Cloud (Render Deployment)**
 
-Replace `http://localhost:5000` with your deployed URL (`https://plum-ai-health-2.onrender.com`):
+Replace `http://localhost:5000` with your deployed URL (`https://plum-ai-health-1.onrender.com`):
 
 ```bash
-curl -X POST https://plum-ai-health-2.onrender.com/ocr \
+curl -X POST https://plum-ai-health-1.onrender.com/ocr \
 -H "Content-Type: application/json" \
 -d '{
   "text": "Age: 35\nSmoker: yes\nExercise: often\nDiet: balanced"
@@ -162,12 +162,12 @@ curl -X POST https://plum-ai-health-2.onrender.com/ocr \
 ```
 
 ```bash
-curl -X POST https://plum-ai-health-2.onrender.com/ocr \
+curl -X POST https://plum-ai-health-1.onrender.com/ocr \
 -F "file=@./backend/uploads/sample.png"
 ```
 
 ```bash
-curl -X POST https://plum-ai-health-2.onrender.com/factors \
+curl -X POST https://plum-ai-health-1.onrender.com/factors \
 -H "Content-Type: application/json" \
 -d '{
   "answers": {
@@ -180,7 +180,7 @@ curl -X POST https://plum-ai-health-2.onrender.com/factors \
 ```
 
 ```bash
-curl -X POST https://plum-ai-health-2.onrender.com/risk \
+curl -X POST https://plum-ai-health-1.onrender.com/risk \
 -H "Content-Type: application/json" \
 -d '{
   "factors": ["smoking", "high_blood_pressure"]
@@ -188,7 +188,7 @@ curl -X POST https://plum-ai-health-2.onrender.com/risk \
 ```
 
 ```bash
-curl -X POST https://plum-ai-health-2.onrender.com/recommend \
+curl -X POST https://plum-ai-health-1.onrender.com/recommend \
 -H "Content-Type: application/json" \
 -d '{
   "risk_level": "high",
@@ -235,6 +235,7 @@ curl -X POST https://plum-ai-health-2.onrender.com/recommend \
 MIT
 
 ---
+
 
 
 
